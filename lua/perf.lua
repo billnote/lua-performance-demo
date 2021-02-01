@@ -42,6 +42,16 @@ local function init()
     math.randomseed(seed)
 end
 
+local function gen_uri_comp(max_len, body, idx)
+    local n = math_random(max_len)
+    for _ = 1, n do
+        idx = idx + 1
+        body[idx] =  uri_random_charset[math_random(uri_charset_length)]
+    end
+
+    return idx
+end
+
 local function gen_body()
     local max_n = 1000
     local max_len = 20
@@ -50,19 +60,11 @@ local function gen_body()
     local n = math_random(max_n)
     local idx = 0
 
-    local gen_uri_comp = function ()
-        local len = math_random(max_len)
-        for _ = 1, len do
-            idx = idx + 1
-            body[idx] = uri_random_charset[math_random(uri_charset_length)]
-        end
-    end
-
     for i = 1, n do
-        gen_uri_comp()
+        idx = gen_uri_comp(max_len, body, idx)
         idx = idx + 1
         body[idx] = "="
-        gen_uri_comp()
+        idx = gen_uri_comp(max_len, body, idx)
 
         if i < n then
             idx = idx + 1
