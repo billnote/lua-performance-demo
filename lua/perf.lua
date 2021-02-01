@@ -2,6 +2,9 @@ local math_random = math.random
 local table_concat = table.concat
 local new_tab = require "table.new"
 
+local tablepool = require "tablepool"
+local pool_name = "perf_demo_pool"
+
 -- uri_charset
 local uri_charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._~:/@!,;=+*-"
 local uri_charset_length = #uri_charset
@@ -42,7 +45,7 @@ end
 local function gen_body()
     local max_n = 1000
     local max_len = 20
-    local body = new_tab(max_n * max_len, 0)
+    local body = tablepool.fetch(pool_name, max_len * max_n, 0)
     
     local n = math_random(max_n)
     local idx = 0
