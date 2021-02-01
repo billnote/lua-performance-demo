@@ -39,28 +39,27 @@ local function init()
     math.randomseed(seed)
 end
 
-local function gen_uri_comp()
-    local value = {}
-    local len = math_random(20) -- between 1 and 20
+local function gen_body()
+    local max_n = 1000
+    local max_len = 20
+    local body = new_tab(max_n * max_len, 0)
+    
+    local n = math_random(max_n)
+    local idx = 0
 
-    for i = 1, len do
-        value[i] = uri_random_charset[math_random(uri_charset_length)]
+    local gen_uri_comp = function ()
+        local len = math_random(max_len)
+        for _ = 1, len do
+            idx = idx + 1
+            body[idx] = uri_random_charset[math_random(uri_charset_length)]
+        end
     end
 
-    return table_concat(value, "")
-end
-
-local function gen_body()
-    local n = math_random(1000)
-    local body = new_tab(n, 0)
-    local idx = 1
-
     for i = 1, n do
-        body[idx] = gen_uri_comp()
+        gen_uri_comp()
         idx = idx + 1
         body[idx] = "="
-        idx = idx + 1
-        body[idx] = gen_uri_comp()
+        gen_uri_comp()
 
         if i < n then
             idx = idx + 1
